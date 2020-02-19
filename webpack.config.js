@@ -1,5 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const URLImportPlugin = require('webpack-external-import/webpack');
+
+const manifestName = 'toto';
 
 module.exports = {
   mode: 'development',
@@ -50,5 +53,40 @@ module.exports = {
     clientLogLevel: 'debug',
   },
   // `HtmlWebpackPlugin` will generate index.html into the build folder
-  plugins: [new HtmlWebpackPlugin({ template: 'src/index.html' })],
+  plugins: [
+    new HtmlWebpackPlugin({ template: 'src/index.html' }),
+    // new URLImportPlugin({
+    //   useExternals: {
+    //     // react: 'React',
+    //     manifestName: 'my-special-build',
+    //   },
+    // }),
+    new URLImportPlugin({
+      manifestName,
+      fileName: 'importManifest.js',
+      basePath: ``,
+      publicPath: `//localhost:3001/`,
+      transformExtensions: /^(gz|map)$/i,
+      writeToFileEmit: false,
+      seed: null,
+      filter: null,
+      debug: true,
+      map: null,
+      generate: null,
+      sort: null,
+    }),
+  ],
 };
+
+// new URLImportPlugin({
+//   manifestName: "website-one",
+//   fileName: "importManifest.js",
+//   basePath: ``,
+//   publicPath: `//localhost:3001/`,
+//   writeToFileEmit: false,
+//   seed: null,
+//   filter: null,
+//   debug: true,
+//   useExternals: {},
+//   provideExternals: {}
+// })

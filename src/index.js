@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { corsImport } from 'webpack-external-import';
+import { corsImport, ExternalComponent } from 'webpack-external-import';
 
 import { Navbar } from '@scality/core-ui';
 
@@ -34,7 +34,14 @@ Promise.all(
     .map(path => corsImport(`${path}?${Date.now()}`)),
 ).then(() =>
   ReactDOM.render(
-    <Navbar productName={'ShellPOC'} tabs={tabs} />,
+    <div>
+      <Navbar productName={'ShellPOC'} tabs={tabs} />
+      <ExternalComponent
+        interleave={__webpack_require__.interleaved('metalK8s/Hello.js')}
+        export="Title"
+        title="Some Heading"
+      />
+    </div>,
     document.getElementById('root'),
   ),
 );
