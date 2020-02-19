@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { corsImport } from 'webpack-external-import';
+
 import { Navbar } from '@scality/core-ui';
 
 const tabs = [
@@ -15,7 +17,24 @@ const tabs = [
   },
 ];
 
-ReactDOM.render(
-  <Navbar productName={'ShellPOC'} tabs={tabs} />,
-  document.getElementById('root'),
+const configMap = [
+  {
+    name: 'metalk8s',
+    version: '2.4.2',
+    path: 'metalk8s/importManifest.js',
+  },
+];
+
+Promise.all(
+  configMap
+    .map(solution => {
+      console.log(' solution', solution);
+      return solution.path;
+    })
+    .map(path => corsImport(`${path}?${Date.now()}`)),
+).then(() =>
+  ReactDOM.render(
+    <Navbar productName={'ShellPOC'} tabs={tabs} />,
+    document.getElementById('root'),
+  ),
 );
