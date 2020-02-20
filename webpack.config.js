@@ -60,6 +60,7 @@ module.exports = {
       },
     },
     clientLogLevel: 'debug',
+    historyApiFallback: true,
   },
   // `HtmlWebpackPlugin` will generate index.html into the build folder
   plugins: [

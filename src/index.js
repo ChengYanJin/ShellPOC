@@ -1,21 +1,52 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom';
 import { corsImport, ExternalComponent } from 'webpack-external-import';
 
 import { Navbar } from '@scality/core-ui';
 
-const tabs = [
-  {
-    selected: false,
-    title: 'metalK8s',
-    onClick: () => console.log('metalK8s'),
-  },
-  {
-    selected: false,
-    title: 'Zenko',
-    onClick: () => console.log('zenko'),
-  },
-];
+const DefaultApp = () => {
+  return <div>Hello World in Shell ! :D</div>;
+};
+
+const App = () => {
+  const history = useHistory();
+  const tabs = [
+    {
+      selected: false,
+      title: 'metalK8s',
+      onClick: () => history.push('/metalk8s'),
+    },
+    {
+      selected: false,
+      title: 'Zenko',
+      onClick: () => console.log('zenko'),
+    },
+  ];
+
+  return (
+    <>
+      <Navbar productName={'ShellPOC'} tabs={tabs} />
+      <Switch>
+        <Route
+          exact
+          path="/metalk8s"
+          component={() => (
+            <ExternalComponent
+              interleave={__webpack_require__.interleaved('metalK8s/AppMetal')}
+            />
+          )}
+        ></Route>
+        <Route path="/">
+          {/* <DefaultApp /> */}
+          <ExternalComponent
+            interleave={__webpack_require__.interleaved('metalK8s/AppMetal')}
+          />
+        </Route>
+      </Switch>
+    </>
+  );
+};
 
 const configMap = [
   {
@@ -31,14 +62,9 @@ Promise.all(
     .map(path => corsImport(`${path}?${Date.now()}`)),
 ).then(() =>
   ReactDOM.render(
-    <div>
-      <Navbar productName={'ShellPOC'} tabs={tabs} />
-      <ExternalComponent
-        interleave={__webpack_require__.interleaved('metalK8s/Hello')}
-        export="Title"
-        title="Some Heading"
-      />
-    </div>,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
     document.getElementById('root'),
   ),
 );
