@@ -44,10 +44,19 @@ module.exports = {
       'Access-Control-Allow-Origin': '*',
     },
     proxy: {
-      '/metalk8s': {
+      // In order to fetch the manifest from metalk8s
+      '/external-manifest/metalk8s': {
         target: ' http://localhost:3001/',
         changeOrigin: true,
-        pathRewrite: { '^/metalk8s': '' },
+        pathRewrite: { '^/external-manifest/metalk8s': '' },
+      },
+      // In order to fetch the components from metalk8s
+      //  we will need to add the `publicPath = /external-component/metalk8s`
+      //  for URLImportPlugin in metalk8s
+      '/external-component/metalk8s': {
+        target: 'http://localhost:3001/',
+        changeOrigin: true,
+        pathRewrite: { '^/external-component/metalk8s': '' },
       },
     },
     clientLogLevel: 'debug',
@@ -55,38 +64,9 @@ module.exports = {
   // `HtmlWebpackPlugin` will generate index.html into the build folder
   plugins: [
     new HtmlWebpackPlugin({ template: 'src/index.html' }),
-    // new URLImportPlugin({
-    //   useExternals: {
-    //     // react: 'React',
-    //     manifestName: 'my-special-build',
-    //   },
-    // }),
+    // URLImportPlugin is needed in the shell for `interleave` method.
     new URLImportPlugin({
-      manifestName,
-      fileName: 'importManifest.js',
-      basePath: ``,
-      publicPath: `//localhost:3001/`,
-      transformExtensions: /^(gz|map)$/i,
-      writeToFileEmit: false,
-      seed: null,
-      filter: null,
-      debug: true,
-      map: null,
-      generate: null,
-      sort: null,
+      manifestName: 'Shell',
     }),
   ],
 };
-
-// new URLImportPlugin({
-//   manifestName: "website-one",
-//   fileName: "importManifest.js",
-//   basePath: ``,
-//   publicPath: `//localhost:3001/`,
-//   writeToFileEmit: false,
-//   seed: null,
-//   filter: null,
-//   debug: true,
-//   useExternals: {},
-//   provideExternals: {}
-// })

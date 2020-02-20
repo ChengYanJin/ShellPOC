@@ -21,23 +21,20 @@ const configMap = [
   {
     name: 'metalk8s',
     version: '2.4.2',
-    path: 'metalk8s/importManifest.js',
+    path: 'external-manifest/metalk8s/importManifest.js',
   },
 ];
 
 Promise.all(
   configMap
-    .map(solution => {
-      console.log(' solution', solution);
-      return solution.path;
-    })
+    .map(solution => solution.path)
     .map(path => corsImport(`${path}?${Date.now()}`)),
 ).then(() =>
   ReactDOM.render(
     <div>
       <Navbar productName={'ShellPOC'} tabs={tabs} />
       <ExternalComponent
-        interleave={__webpack_require__.interleaved('metalK8s/Hello.js')}
+        interleave={__webpack_require__.interleaved('metalK8s/Hello')}
         export="Title"
         title="Some Heading"
       />
