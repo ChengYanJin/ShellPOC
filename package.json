@@ -33,7 +33,7 @@
     "vega": "^5.9.1",
     "vega-embed": "^6.2.2",
     "vega-lite": "^4.3.1",
-    "webpack-external-import": "^2.2.0"
+    "webpack-external-import": "github:carlito-scality/webpack-external-import.git#microapp-poc"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

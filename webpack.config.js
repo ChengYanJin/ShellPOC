@@ -3,10 +3,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const URLImportPlugin = require('webpack-external-import/webpack');
 
 const manifestName = 'toto';
-
-module.exports = {
+const config = {
   mode: 'development',
-  entry: './src/index.js',
+  entry: {
+    shell: './src/index.js',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
@@ -71,3 +72,12 @@ module.exports = {
     }),
   ],
 };
+
+module.exports = config;
+
+const util = require('util');
+// alternative shortcut
+console.log(
+  'metal',
+  util.inspect(config, false, null, true /* enable colors */),
+);

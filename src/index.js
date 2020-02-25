@@ -33,15 +33,12 @@ const App = () => {
           path="/metalk8s"
           component={() => (
             <ExternalComponent
-              interleave={__webpack_require__.interleaved('metalK8s/AppMetal')}
+              interleave={__webpack_require__.interleaved('metalK8s/Volume')}
             />
           )}
         ></Route>
         <Route path="/">
-          {/* <DefaultApp /> */}
-          <ExternalComponent
-            interleave={__webpack_require__.interleaved('metalK8s/AppMetal')}
-          />
+          <DefaultApp />
         </Route>
       </Switch>
     </>
