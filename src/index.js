@@ -29,7 +29,7 @@ const App = () => {
       <Navbar productName={'ShellPOC'} tabs={tabs} />
       <Switch>
         <Route
-          exact
+          // exact
           path="/metalk8s"
           component={() => (
             <ExternalComponent
@@ -51,7 +51,8 @@ const configMap = [
   {
     name: 'metalk8s',
     version: '2.4.2',
-    path: 'external-manifest/metalk8s/importManifest.js',
+    // we need to give the absolute path to fetch the importManifest
+    path: '/external-manifest/metalk8s/importManifest.js',
   },
 ];
 

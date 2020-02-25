@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const URLImportPlugin = require('webpack-external-import/webpack');
+const webpack = require('webpack');
 
 const manifestName = 'toto';
 const config = {
@@ -10,7 +11,8 @@ const config = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].[hash].js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -62,6 +64,7 @@ const config = {
     },
     clientLogLevel: 'debug',
     historyApiFallback: true,
+    hot: true,
   },
   // `HtmlWebpackPlugin` will generate index.html into the build folder
   plugins: [
@@ -70,6 +73,7 @@ const config = {
     new URLImportPlugin({
       manifestName: 'Shell',
     }),
+    new webpack.HotModuleReplacementPlugin(),
   ],
 };
 
@@ -81,3 +85,13 @@ console.log(
   'metal',
   util.inspect(config, false, null, true /* enable colors */),
 );
+
+// Webpack config note:
+
+// How to solve Refresh issue?
+// Issue description: When we refresh the page in the shell, it fetch the resources(importManifest, components and bundles)base on the current URL.
+// 1. For URLImportPlugin, we need to give absolute path for publicPath.
+// 2. Same for the importManifest path, we will need to add `/` at the beginning to make it an absolute path.
+// 3. For the output webpack config, we need to give a publicPath '/' to make it an absolute path.
+
+// HMR (Hot Module Replacement) should never be used in production.
