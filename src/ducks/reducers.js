@@ -1,18 +1,17 @@
 import { createStore, combineReducers } from 'redux';
-import configReducer from './config';
 
 const configureStore = () => {
+  const staticReducer = {};
+  const initialReducer = state => state;
   const store = createStore(
-    combineReducers({
-      shellReducer: configReducer,
-    }),
+    initialReducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ &&
       window.__REDUX_DEVTOOLS_EXTENSION__(),
   );
 
   const createReducer = asyncReducers => {
     return combineReducers({
-      shellReducer: configReducer,
+      staticReducer,
       ...asyncReducers,
     });
   };

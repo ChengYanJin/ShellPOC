@@ -1,9 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import { ExternalComponent } from 'webpack-external-import';
-import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Navbar } from '@scality/core-ui';
+import {
+  nameSpaceAction,
+  setActionCreatorNamespace,
+  namespaceReducerFactory,
+} from './ducks/namespaceHelper';
+import configReducer, { changeOwnerAction } from './ducks/config';
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -19,9 +24,18 @@ const MicroApp = ({ entryManifestComponent, ...rest }) => {
 };
 
 const App = props => {
-  const { store } = props;
+  const { store, namespace } = props;
   const history = useHistory();
-
+  const dispatch = useDispatch();
+  // set namespace `localMetalk8s`
+  setActionCreatorNamespace(namespace);
+  // Inject our reducer for metalk8s
+  useEffect(() => {
+    store.injectReducer(
+      `${namespace}`,
+      namespaceReducerFactory(namespace, configReducer),
+    );
+  }, []);
   const tabs = [
     {
       selected: false,
@@ -48,6 +62,13 @@ const App = props => {
         </Route>
         <Route path="/">
           <DefaultApp />
+          <button
+            onClick={() =>
+              dispatch(nameSpaceAction(changeOwnerAction, 'Yanjin in shell'))
+            }
+          >
+            update shell owner
+          </button>
         </Route>
       </Switch>
     </>

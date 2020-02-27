@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route, useHistory } from 'react-router-dom';
-import { corsImport, ExternalComponent } from 'webpack-external-import';
-import { Provider, useSelector } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { corsImport } from 'webpack-external-import';
+import { Provider } from 'react-redux';
 
 import { configureStore } from './ducks/reducers';
 import App from './App';
@@ -26,7 +26,7 @@ Promise.all(
   ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
-        <App store={store} />
+        <App store={store} namespace="shell" />
       </BrowserRouter>
     </Provider>,
     document.getElementById('root'),
