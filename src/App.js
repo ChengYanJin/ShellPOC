@@ -9,6 +9,18 @@ import {
   namespaceReducerFactory,
 } from './ducks/namespaceHelper';
 import configReducer, { changeOwnerAction } from './ducks/config';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
+// Test
+const FETCH_YANJIN = 'FETCH_YANJIN';
+function* fetchYanjin() {
+  console.log('fetchYanjin');
+  // yield;
+}
+
+export function* yanjinSaga() {
+  yield takeLatest(FETCH_YANJIN, fetchYanjin);
+}
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -35,6 +47,8 @@ const App = props => {
       `${namespace}`,
       namespaceReducerFactory(namespace, configReducer),
     );
+
+    store.runSaga(yanjinSaga);
   }, []);
   const tabs = [
     {
@@ -68,6 +82,12 @@ const App = props => {
             }
           >
             update shell owner
+          </button>
+          <button onClick={() => dispatch({ type: 'FETCH_YANJIN' })}>
+            dispatch FETCH_YANJIN
+          </button>
+          <button onClick={() => dispatch({ type: 'FETCH_PATRICK' })}>
+            dispatch FETCH_PATRICK
           </button>
         </Route>
       </Switch>

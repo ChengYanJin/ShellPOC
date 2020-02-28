@@ -25,17 +25,18 @@
     "react": "^16.12.0",
     "react-debounce-input": "^3.2.2",
     "react-dom": "^16.12.0",
+    "react-redux": "^7.1.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.0.8",
     "react-virtualized": "^9.21.2",
+    "redux": "^4.0.1",
+    "redux-saga": "^1.1.3",
     "styled-components": "^5.0.1",
     "vega": "^5.9.1",
     "vega-embed": "^6.2.2",
     "vega-lite": "^4.3.1",
-    "webpack-external-import": "github:carlito-scality/webpack-external-import.git#microapp-poc",
-    "react-redux": "^7.1.0",
-    "redux": "^4.0.1"
+    "webpack-external-import": "github:carlito-scality/webpack-external-import.git#microapp-poc"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
