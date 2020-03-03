@@ -10,17 +10,7 @@ import {
 } from './ducks/namespaceHelper';
 import configReducer, { changeOwnerAction } from './ducks/config';
 import { call, put, takeLatest } from 'redux-saga/effects';
-
-// Test
-const FETCH_YANJIN = 'FETCH_YANJIN';
-function* fetchYanjin() {
-  console.log('fetchYanjin');
-  // yield;
-}
-
-export function* yanjinSaga() {
-  yield takeLatest(FETCH_YANJIN, fetchYanjin);
-}
+import CallbackPage from './loginCallback';
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -47,8 +37,6 @@ const App = props => {
       `${namespace}`,
       namespaceReducerFactory(namespace, configReducer),
     );
-
-    store.runSaga(yanjinSaga);
   }, []);
   const tabs = [
     {
@@ -74,6 +62,12 @@ const App = props => {
             namespace="metalk8s"
           />
         </Route>
+        <Route
+          path="/oauth2/callback"
+          component={() => {
+            return <CallbackPage />;
+          }}
+        />
         <Route path="/">
           <DefaultApp />
           <button

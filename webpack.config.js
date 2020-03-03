@@ -41,14 +41,14 @@ const config = {
   },
   devServer: {
     compress: true,
-    port: 3001,
+    port: 3000,
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
     proxy: {
       // In order to fetch the manifest from metalk8s
       '/external-manifest/metalk8s': {
-        target: ' http://localhost:3000/',
+        target: ' http://localhost:3001/',
         changeOrigin: true,
         pathRewrite: { '^/external-manifest/metalk8s': '' },
       },
@@ -56,7 +56,7 @@ const config = {
       //  we will need to add the `publicPath = /external-component/metalk8s`
       //  for URLImportPlugin in metalk8s
       '/external-component/metalk8s': {
-        target: 'http://localhost:3000/',
+        target: 'http://localhost:3001/',
         changeOrigin: true,
         pathRewrite: { '^/external-component/metalk8s': '' },
       },
