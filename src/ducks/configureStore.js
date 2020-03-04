@@ -2,12 +2,8 @@
 import 'regenerator-runtime/runtime';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { reducer as oidcReducer } from 'redux-oidc';
-
-const shellReducer = combineReducers({
-  oidc: oidcReducer,
-});
+// import { call, put, takeLatest } from 'redux-saga/effects';
+import shell from './reducer';
 
 // Shell
 const sagaMiddleware = createSagaMiddleware();
@@ -16,13 +12,13 @@ const configureStore = () => {
   const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const store = createStore(
-    shellReducer,
+    shell,
     composeEnhancers(applyMiddleware(sagaMiddleware)),
   );
 
   const createReducer = asyncReducers => {
     return combineReducers({
-      shellReducer,
+      shell,
       ...asyncReducers,
     });
   };

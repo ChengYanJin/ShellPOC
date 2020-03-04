@@ -3,9 +3,17 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { corsImport } from 'webpack-external-import';
 import { Provider } from 'react-redux';
-
-import { configureStore } from './ducks/reducers';
+import { OidcProvider } from 'redux-oidc';
+import {
+  nameSpaceAction,
+  setActionCreatorNamespace,
+  namespaceReducerFactory,
+  setSelectorNamespace,
+} from './ducks/namespaceHelper';
+import { createUserManagerAction } from './ducks/config';
+import { configureStore } from './ducks/configureStore';
 import App from './App';
+import rootReducer from './ducks/reducer';
 
 const configMap = [
   {
@@ -17,6 +25,17 @@ const configMap = [
 ];
 
 const store = configureStore();
+const namespace = 'shell';
+setActionCreatorNamespace(namespace);
+setSelectorNamespace(namespace);
+
+store.injectReducer(
+  `${namespace}`,
+  namespaceReducerFactory(namespace, rootReducer),
+);
+
+store.dispatch(nameSpaceAction(createUserManagerAction));
+const userManager = store.getState()[namespace].config.userManager;
 
 Promise.all(
   configMap
@@ -25,9 +44,11 @@ Promise.all(
 ).then(() =>
   ReactDOM.render(
     <Provider store={store}>
-      <BrowserRouter>
-        <App store={store} namespace="shell" />
-      </BrowserRouter>
+      <OidcProvider store={store} userManager={userManager}>
+        <BrowserRouter>
+          <App store={store} namespace="shell" />
+        </BrowserRouter>
+      </OidcProvider>
     </Provider>,
     document.getElementById('root'),
   ),

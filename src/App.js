@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import { ExternalComponent } from 'webpack-external-import';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navbar } from '@scality/core-ui';
 import {
-  nameSpaceAction,
-  setActionCreatorNamespace,
-  namespaceReducerFactory,
+  appNamespaceSelector,
+  setSelectorNamespace,
 } from './ducks/namespaceHelper';
-import configReducer, { changeOwnerAction } from './ducks/config';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import CallbackPage from './loginCallback';
+import { loadUser, createUserManager } from 'redux-oidc';
+import { WebStorageStateStore } from 'oidc-client';
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -29,15 +29,8 @@ const App = props => {
   const { store, namespace } = props;
   const history = useHistory();
   const dispatch = useDispatch();
-  // set namespace `localMetalk8s`
-  setActionCreatorNamespace(namespace);
-  // Inject our reducer for metalk8s
-  useEffect(() => {
-    store.injectReducer(
-      `${namespace}`,
-      namespaceReducerFactory(namespace, configReducer),
-    );
-  }, []);
+
+  setSelectorNamespace(namespace);
   const tabs = [
     {
       selected: false,
@@ -50,6 +43,11 @@ const App = props => {
       onClick: () => console.log('zenko'),
     },
   ];
+
+  // Get the state
+  const userManager = useSelector(
+    state => appNamespaceSelector(state).config.userManager,
+  );
 
   return (
     <>
@@ -65,18 +63,11 @@ const App = props => {
         <Route
           path="/oauth2/callback"
           component={() => {
-            return <CallbackPage />;
+            return <CallbackPage userManager={userManager} />;
           }}
         />
         <Route path="/">
           <DefaultApp />
-          <button
-            onClick={() =>
-              dispatch(nameSpaceAction(changeOwnerAction, 'Yanjin in shell'))
-            }
-          >
-            update shell owner
-          </button>
           <button onClick={() => dispatch({ type: 'FETCH_YANJIN' })}>
             dispatch FETCH_YANJIN
           </button>

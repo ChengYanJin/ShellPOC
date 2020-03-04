@@ -7,14 +7,14 @@ import { useSelector } from 'react-redux';
 // import { appNamespaceSelector } from './ducks/namespaceHelper';
 // import corsImport from 'webpack-external-import/corsImport';
 
-const CallbackPage = () => {
+const CallbackPage = props => {
   // const dispatch = useDispatch();
-  const userManager = useSelector(state => state);
+  const userManager = props.userManager;
 
-  console.log('userManager', userManager);
+  console.log('userManager', props.userManager);
 
   const history = useHistory();
-  return (
+  return userManager != null ? (
     <CallbackComponent
       userManager={userManager}
       successCallback={user => {
@@ -27,6 +27,8 @@ const CallbackPage = () => {
     >
       <div>redirecting</div>
     </CallbackComponent>
+  ) : (
+    <div>Loading</div>
   );
 };
 
