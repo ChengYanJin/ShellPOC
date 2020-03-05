@@ -23,6 +23,7 @@ export default (state = defaultState, action = {}) => {
   switch (action.type) {
     case 'CHANGE_OWNER':
       return { ...state, owner: action.payload };
+    // hard code the userManager config for the moment
     case 'CREATE_USER_MANAGER': {
       const config = {
         client_id: 'metalk8s-ui',
@@ -35,7 +36,6 @@ export default (state = defaultState, action = {}) => {
         post_logout_redirect_uri: '/',
         userStore: new WebStorageStateStore({ store: localStorage }),
       };
-
       const userManager = createUserManager(config);
       return { ...state, userManager };
     }

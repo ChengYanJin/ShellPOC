@@ -1,11 +1,7 @@
 import React from 'react';
 import { CallbackComponent } from 'redux-oidc';
 import { useHistory } from 'react-router';
-import { useSelector } from 'react-redux';
 // import Loader from '../components/Loader';
-// import { intl } from '../translations/IntlGlobalProvider';
-// import { appNamespaceSelector } from './ducks/namespaceHelper';
-// import corsImport from 'webpack-external-import/corsImport';
 
 const CallbackPage = props => {
   // const dispatch = useDispatch();

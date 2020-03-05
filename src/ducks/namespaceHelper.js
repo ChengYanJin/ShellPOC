@@ -25,6 +25,7 @@ const namespaceReducerFactory = (namespace, reducerFunction) => (
     SESSION_TERMINATED,
     USER_SIGNED_OUT,
   ];
+  // If it's oidc action, then we don't need to check the namespace
   if (action && reduxOidcActions.includes(action.type)) {
     return reducerFunction(state, action);
   }

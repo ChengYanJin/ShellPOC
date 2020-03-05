@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { corsImport } from 'webpack-external-import';
 import { Provider } from 'react-redux';
-import { OidcProvider } from 'redux-oidc';
+import { OidcProvider, loadUser } from 'redux-oidc';
+
 import {
   nameSpaceAction,
   setActionCreatorNamespace,
@@ -36,6 +37,7 @@ store.injectReducer(
 
 store.dispatch(nameSpaceAction(createUserManagerAction));
 const userManager = store.getState()[namespace].config.userManager;
+loadUser(store, userManager);
 
 Promise.all(
   configMap
