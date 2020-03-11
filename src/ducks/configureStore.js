@@ -4,7 +4,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 // import { call, put, takeLatest } from 'redux-saga/effects';
 import shell from './reducer';
-
+import { namespaced } from 'redux-subspace';
 // Shell
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,7 +28,7 @@ const configureStore = () => {
   // Create an inject reducer function
   // This function adds the async reducer, and creates a new combined reducer
   store.injectReducer = (key, asyncReducer) => {
-    store.asyncReducers[key] = asyncReducer;
+    store.asyncReducers[key] = namespaced(key)(asyncReducer);
     store.replaceReducer(createReducer(store.asyncReducers));
   };
 

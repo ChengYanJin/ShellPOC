@@ -23,7 +23,7 @@ export default (state = defaultState, action = {}) => {
   switch (action.type) {
     case 'CHANGE_OWNER':
       return { ...state, owner: action.payload };
-    // hard code the userManager config for the moment
+    // hard code the userManager config for the moment, we will need to change the authority if the controll plane ip changes
     case 'CREATE_USER_MANAGER': {
       const config = {
         client_id: 'metalk8s-ui',
@@ -31,7 +31,7 @@ export default (state = defaultState, action = {}) => {
         response_type: 'id_token',
         scope:
           'openid profile email offline_access audience:server:client_id:oidc-auth-client',
-        authority: 'https://172.21.254.14:8443/oidc',
+        authority: 'https://172.21.254.11:8443/oidc',
         loadUserInfo: false,
         post_logout_redirect_uri: '/',
         userStore: new WebStorageStateStore({ store: localStorage }),

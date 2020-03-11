@@ -11,6 +11,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import CallbackPage from './loginCallback';
 import { loadUser, createUserManager } from 'redux-oidc';
 import { WebStorageStateStore } from 'oidc-client';
+import { subspace } from 'redux-subspace';
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -49,6 +50,10 @@ const App = props => {
     state => appNamespaceSelector(state).config.userManager,
   );
 
+  const subStore = subspace(state => state.metalk8s, 'metalk8s')(store);
+
+  console.log('subStore', subStore);
+
   return (
     <>
       <Navbar productName={'ShellPOC'} tabs={tabs} />
@@ -56,7 +61,7 @@ const App = props => {
         <Route path="/metalk8s">
           <MicroApp
             entryManifestComponent="metalK8s/MetalMicroApp"
-            store={store}
+            store={subStore}
             namespace="metalk8s"
           />
         </Route>

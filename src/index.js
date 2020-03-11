@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { corsImport } from 'webpack-external-import';
 import { Provider } from 'react-redux';
 import { OidcProvider, loadUser } from 'redux-oidc';
-
 import {
   nameSpaceAction,
   setActionCreatorNamespace,
@@ -15,6 +14,8 @@ import { createUserManagerAction } from './ducks/config';
 import { configureStore } from './ducks/configureStore';
 import App from './App';
 import rootReducer from './ducks/reducer';
+import { namespaced, subspace } from 'redux-subspace';
+import { SubspaceProvider } from 'react-redux-subspace';
 
 const configMap = [
   {
@@ -30,14 +31,13 @@ const namespace = 'shell';
 setActionCreatorNamespace(namespace);
 setSelectorNamespace(namespace);
 
-store.injectReducer(
-  `${namespace}`,
-  namespaceReducerFactory(namespace, rootReducer),
-);
+store.injectReducer(`${namespace}`, namespaced(`${namespace}`)(rootReducer));
+console.log('shell store', store);
 
-store.dispatch(nameSpaceAction(createUserManagerAction));
-const userManager = store.getState()[namespace].config.userManager;
-loadUser(store, userManager);
+// store.dispatch(nameSpaceAction(createUserManagerAction));
+// const userManager = store.getState()[namespace].config.userManager;
+// loadUser(store, userManager);
+// const shellStore = subspace(state => state.shell)(store);
 
 Promise.all(
   configMap
@@ -46,11 +46,11 @@ Promise.all(
 ).then(() =>
   ReactDOM.render(
     <Provider store={store}>
-      <OidcProvider store={store} userManager={userManager}>
-        <BrowserRouter>
-          <App store={store} namespace="shell" />
-        </BrowserRouter>
-      </OidcProvider>
+      {/* <OidcProvider store={store} userManager={userManager}> */}
+      <BrowserRouter>
+        <App store={store} namespace="shell" />
+      </BrowserRouter>
+      {/* </OidcProvider> */}
     </Provider>,
     document.getElementById('root'),
   ),
