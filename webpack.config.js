@@ -1,13 +1,11 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const URLImportPlugin = require('webpack-external-import/webpack');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin');
 
 const config = {
   mode: 'development',
-  entry: {
-    shell: './src/index.js',
-  },
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].[hash].js',
@@ -58,7 +56,7 @@ const config = {
       '/external-component/metalk8s': {
         target: 'http://localhost:3001/',
         changeOrigin: true,
-        pathRewrite: { '^/external-component/metalk8s': '' },
+        // pathRewrite: { '^/external-component/metalk8s': '' },
       },
     },
     clientLogLevel: 'debug',
@@ -67,27 +65,19 @@ const config = {
   },
   // `HtmlWebpackPlugin` will generate index.html into the build folder
   plugins: [
-    new HtmlWebpackPlugin({ template: 'src/index.html' }),
-    // URLImportPlugin is needed in the shell for `interleave` method.
-    new URLImportPlugin({
-      manifestName: 'Shell',
+    new ModuleFederationPlugin({
+      name: 'shell',
+      library: { type: 'var', name: 'shellLibrary' },
+      remotes: {
+        metalk8s: 'metalk8s',
+      },
     }),
+    new HtmlWebpackPlugin({ template: 'src/index.html' }),
     new webpack.HotModuleReplacementPlugin(),
   ],
-  node: {
-    Buffer: false,
-    process: false,
-  },
 };
 
 module.exports = config;
-
-const util = require('util');
-// alternative shortcut
-console.log(
-  'metal',
-  util.inspect(config, false, null, true /* enable colors */),
-);
 
 // Webpack config note:
 

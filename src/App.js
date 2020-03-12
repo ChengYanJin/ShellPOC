@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
-import { ExternalComponent } from 'webpack-external-import';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navbar } from '@scality/core-ui';
 import {
   appNamespaceSelector,
   setSelectorNamespace,
@@ -13,17 +11,15 @@ import { loadUser, createUserManager } from 'redux-oidc';
 import { WebStorageStateStore } from 'oidc-client';
 import { subspace } from 'redux-subspace';
 
+const MetalMicroApp = React.lazy(() => import('metalk8s/Node'));
+//const Toto = React.lazy(() => import('websiteZenko/TotoContainer'));
+const MetalReducer = () =>
+  import('metalk8s/reducer').then(res => console.log('res', res));
+
+console.log('MetalReducer', MetalReducer);
+
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
-};
-
-const MicroApp = ({ entryManifestComponent, ...rest }) => {
-  return (
-    <ExternalComponent
-      interleave={__webpack_require__.interleaved(entryManifestComponent)}
-      {...rest}
-    />
-  );
 };
 
 const App = props => {
@@ -56,14 +52,20 @@ const App = props => {
 
   return (
     <>
-      <Navbar productName={'ShellPOC'} tabs={tabs} />
+      {/* <Navbar productName={'ShellPOC'} tabs={tabs} /> */}
+      <div>
+        {tabs.map((tab, idx) => (
+          <button key={idx} onClick={tab.onClick}>
+            {tab.title}
+          </button>
+        ))}
+      </div>
       <Switch>
         <Route path="/metalk8s">
-          <MicroApp
-            entryManifestComponent="metalK8s/MetalMicroApp"
-            store={subStore}
-            namespace="metalk8s"
-          />
+          <div>Placeholder for Metalk8s</div>
+          <Suspense fallback={<div>Loading Zenko...</div>}>
+            <MetalMicroApp />
+          </Suspense>
         </Route>
         <Route
           path="/oauth2/callback"
