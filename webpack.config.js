@@ -74,6 +74,10 @@ const config = {
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
+  node: {
+    Buffer: false,
+    process: false,
+  },
 };
 
 module.exports = config;
