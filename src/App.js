@@ -9,14 +9,10 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import CallbackPage from './loginCallback';
 import { loadUser, createUserManager } from 'redux-oidc';
 import { WebStorageStateStore } from 'oidc-client';
-import { subspace } from 'redux-subspace';
+import { SubspaceProvider } from 'react-redux-subspace';
 
-const MetalMicroApp = React.lazy(() => import('metalk8s/Node'));
+const MetalOwner = React.lazy(() => import('metalk8s/metalk8sOwner'));
 //const Toto = React.lazy(() => import('websiteZenko/TotoContainer'));
-const MetalReducer = () =>
-  import('metalk8s/reducer').then(res => console.log('res', res));
-
-console.log('MetalReducer', MetalReducer);
 
 const DefaultApp = () => {
   return <div>Hello World in Shell ! :D</div>;
@@ -42,13 +38,9 @@ const App = props => {
   ];
 
   // Get the state
-  const userManager = useSelector(
-    state => appNamespaceSelector(state).config.userManager,
-  );
-
-  const subStore = subspace(state => state.metalk8s, 'metalk8s')(store);
-
-  console.log('subStore', subStore);
+  // const userManager = useSelector(
+  //   state => appNamespaceSelector(state).config.userManager,
+  // );
 
   return (
     <>
@@ -62,25 +54,33 @@ const App = props => {
       </div>
       <Switch>
         <Route path="/metalk8s">
-          <div>Placeholder for Metalk8s</div>
-          <Suspense fallback={<div>Loading Zenko...</div>}>
-            <MetalMicroApp />
-          </Suspense>
+          <SubspaceProvider
+            mapState={state => state.metalk8s}
+            namespace="metalk8s"
+          >
+            <Suspense fallback={<div>Loading Metalk8s...</div>}>
+              <MetalOwner />
+            </Suspense>
+          </SubspaceProvider>
         </Route>
-        <Route
+        {/* <Route
           path="/oauth2/callback"
           component={() => {
             return <CallbackPage userManager={userManager} />;
           }}
-        />
+        /> */}
         <Route path="/">
-          <DefaultApp />
-          <button onClick={() => dispatch({ type: 'FETCH_YANJIN' })}>
-            dispatch FETCH_YANJIN
-          </button>
-          <button onClick={() => dispatch({ type: 'FETCH_PATRICK' })}>
-            dispatch FETCH_PATRICK
-          </button>
+          <SubspaceProvider mapState={state => state.shell} namespace="shell">
+            <div>
+              <DefaultApp />
+              <button onClick={() => dispatch({ type: 'FETCH_YANJIN' })}>
+                dispatch FETCH_YANJIN
+              </button>
+              <button onClick={() => dispatch({ type: 'FETCH_PATRICK' })}>
+                dispatch FETCH_PATRICK
+              </button>
+            </div>
+          </SubspaceProvider>
         </Route>
       </Switch>
     </>

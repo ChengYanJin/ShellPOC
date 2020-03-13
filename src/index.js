@@ -55,7 +55,7 @@ const RootApp = () => {
         shell: namespaced('shell')(rootReducer),
       });
       const composeEnhancers =
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // to debug in the browser
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // enable redux dev tool in the browser
       store = createStore(reducer, composeEnhancers());
       setIsStoreReady(true);
     });
@@ -65,7 +65,7 @@ const RootApp = () => {
     <Provider store={store}>
       {/* <OidcProvider store={store} userManager={userManager}> */}
       <BrowserRouter>
-        <App store={store} namespace="shell" />
+        <App store={store} />
       </BrowserRouter>
       {/* </OidcProvider> */}
     </Provider>
